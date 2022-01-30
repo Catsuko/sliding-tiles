@@ -13,20 +13,11 @@ defmodule SlidingTiles do
     %Tabletop.Piece{id: id * 2}
   end
 
-  # Move to tabletop module, useful! travel(board, starting_position, next_func)
-  # should return a stream and then consumers can use from there
   def find_next_piece(board, starting_pos, {x_dir, y_dir}) do
-    Stream.unfold(starting_pos, fn {x, y} = pos ->
-      next_pos = {x + x_dir, y + y_dir}
-      if pos == starting_pos or (Tabletop.in_bounds?(board, pos) and !Tabletop.occupied?(board, pos)) do
-        {next_pos, next_pos}
-      else
-        nil
-      end
-    end)
-      |> Stream.map(fn pos -> {pos, Tabletop.get_piece(board, pos)} end)
-      |> Enum.to_list()
-      |> List.last()
+    Tabletop.travel(board, starting_pos, fn {x, y} -> {x + x_dir, y + y_dir} end)
+      |> Stream.drop_while(fn {pos, piece} -> pos == starting_pos or piece == nil end)
+      |> Stream.take(1)
+      |> Enum.at(0, {{-1, -1}, nil})
   end
 
 end

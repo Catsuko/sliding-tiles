@@ -5,14 +5,14 @@ defmodule SlidingTiles.PiecesUtilitiesTest do
     test "empty board" do
       result = Tabletop.Board.square(5)
         |> SlidingTiles.find_next_piece({0, 0}, {1, 0})
-      assert {{5, 0}, nil} = result
+      assert {{-1, -1}, nil} = result
     end
 
     test "piece on starting position" do
       result = Tabletop.Board.square(5)
         |> Tabletop.Actions.apply(:add, {SlidingTiles.tile(1), {0, 0}})
         |> SlidingTiles.find_next_piece({0, 0}, {1, 0})
-      assert {{5, 0}, nil} = result
+      assert {{-1, -1}, nil} = result
     end
 
     test "piece to the right of starting position" do
