@@ -2,6 +2,12 @@ defmodule SlidingTiles.TurnTest do
   use ExUnit.Case
   doctest SlidingTiles.Turn
 
+  describe "sliding up" do
+  end
+
+  describe "sliding down" do
+  end
+
   describe "sliding left" do
     test "[2 _ _ _] -> [2 _ _ _]" do
       board = SlidingTiles.fresh_board()
