@@ -1,7 +1,8 @@
 defmodule SlidingTiles.Turn do
 
   def slide(board, :up) do
-    take_turn(board, [], {0, 1})
+    positions = Enum.map(0..3, fn x -> {x, 0} end)
+    take_turn(board, positions, {0, -1})
   end
 
   def slide(board, :left) do
@@ -15,7 +16,8 @@ defmodule SlidingTiles.Turn do
   end
 
   def slide(board, :down) do
-    take_turn(board, [], {0, -1})
+    positions = Enum.map(0..3, fn x -> {x, 3} end)
+    take_turn(board, positions, {0, 1})
   end
 
   defp take_turn(board, starting_positions, direction) do
