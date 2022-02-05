@@ -21,7 +21,7 @@ defmodule SlidingTiles.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:tabletop, "~> 0.1"}
+      {:tabletop, "~> 1.0"}
     ]
   end
 end

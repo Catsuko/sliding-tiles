@@ -21,8 +21,8 @@ defmodule SlidingTiles do
     %Tabletop.Piece{id: id * 2}
   end
 
-  def find_next_piece(board, starting_pos, {x_dir, y_dir}) do
-    Tabletop.travel(board, starting_pos, fn {x, y} -> {x + x_dir, y + y_dir} end)
+  def find_next_piece(board, starting_pos, dir) do
+    Tabletop.travel(board, starting_pos, fn pos -> Tabletop.Grid.add(pos, dir) end)
       |> Stream.drop_while(fn {pos, piece} -> pos == starting_pos or piece == nil end)
       |> Stream.take(1)
       |> Enum.at(0, {{-1, -1}, nil})
@@ -39,9 +39,25 @@ defmodule SlidingTiles do
   end
 
   def check_game_over(board) do
-    # TODO: any possible moves? -> mark game over!
-    board
+    if empty_positions?(board) or combination_exists?(board) do
+      board
+    else
+      Tabletop.Board.assign(board, game_over: true)
+    end
   end
+
+  def combination_exists?(board) do
+    Tabletop.neighbours(board, {0, 0}, &Tabletop.Grid.cardinal_points/1)
+      |> Stream.map(fn {pos_a, pos_b} ->
+        {Tabletop.get_piece(board, pos_a), Tabletop.get_piece(board, pos_b)}
+      end)
+      |> Enum.any?(&Tabletop.Piece.equal?/2)
+  end
+
+  def empty_positions?(board) do
+    Enum.any?(empty_positions(board))
+  end
+
 
   def empty_positions(%Tabletop.Board{pieces: pieces} = board) do
     Map.keys(pieces)
