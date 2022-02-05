@@ -28,11 +28,12 @@ defmodule SlidingTiles do
       |> Enum.at(0, {{-1, -1}, nil})
   end
 
-  def add_random_tile(board) do
+  def add_random_tile(%Tabletop.Board{turn: turn} = board) do
     positions = empty_positions(board)
     if Enum.any?(positions) do
       random_position = Enum.random(positions)
-      Tabletop.Actions.apply(board, :add, {tile(2), random_position})
+      tile_val = if turn == 1, do: 2, else: (:rand.uniform(2) * 2)
+      Tabletop.Actions.apply(board, :add, {tile(tile_val), random_position})
     else
       board
     end
@@ -51,7 +52,7 @@ defmodule SlidingTiles do
       |> Stream.map(fn {pos_a, pos_b} ->
         {Tabletop.get_piece(board, pos_a), Tabletop.get_piece(board, pos_b)}
       end)
-      |> Enum.any?(&Tabletop.Piece.equal?/2)
+      |> Enum.any?(fn {piece_a, piece_b} -> Tabletop.Piece.equal?(piece_a, piece_b) end)
   end
 
   def empty_positions?(board) do

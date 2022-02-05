@@ -9,12 +9,12 @@ defmodule SlidingTiles.EffectsTest do
   end
 
   describe "end of turn" do
-    test "adds another 2 tile at a random position" do
+    test "adds another 2 or 4 tile at a random position" do
       %Tabletop.Board{pieces: pieces} = SlidingTiles.new()
         |> SlidingTiles.Turn.slide(:down)
       tile_count = Map.values(pieces)
         |> Enum.filter(fn item -> item end)
-        |> Enum.count(fn %Tabletop.Piece{id: id} -> id == 2 end)
+        |> Enum.count(fn %Tabletop.Piece{id: id} -> id == 2 or id == 4 end)
       assert tile_count == 2
     end
 
